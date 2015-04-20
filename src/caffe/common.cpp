@@ -3,7 +3,9 @@
 #include <ctime>
 
 #include "caffe/common.hpp"
+#include "caffe/blob.hpp"
 #include "caffe/util/rng.hpp"
+#include <stdio.h>
 
 namespace caffe {
 
@@ -42,7 +44,13 @@ void GlobalInit(int* pargc, char*** pargv) {
 #ifdef CPU_ONLY  // CPU-only Caffe.
 
 Caffe::Caffe()
-    : random_generator_(), mode_(Caffe::CPU) { }
+    : random_generator_(), ParamServer_Double_(new ParamServer<Blob<double> >),ParamServer_Float_(new ParamServer<Blob<float> >),mode_(Caffe::CPU) {
+   }
+//Caffe::Caffe()
+//    : random_generator_(), mode_(Caffe::CPU) {
+
+//   }
+
 
 Caffe::~Caffe() { }
 

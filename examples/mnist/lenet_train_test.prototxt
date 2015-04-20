@@ -13,6 +13,7 @@ layer {
   data_param {
     source: "examples/mnist/mnist_train_lmdb"
     batch_size: 64
+    rand_skip: 1000
     backend: LMDB
   }
 }
@@ -30,6 +31,7 @@ layer {
   data_param {
     source: "examples/mnist/mnist_test_lmdb"
     batch_size: 100
+    rand_skip: 1000
     backend: LMDB
   }
 }

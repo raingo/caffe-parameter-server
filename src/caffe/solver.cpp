@@ -176,6 +176,8 @@ void Solver<Dtype>::Step(int iters) {
     const bool display = param_.display() && iter_ % param_.display() == 0;
     net_->set_debug_info(display && param_.debug_info());
     Dtype loss = net_->ForwardBackward(bottom_vec);
+    CHECK(!std::isnan(loss));
+
     if (losses.size() < average_loss) {
       losses.push_back(loss);
       int size = losses.size();
@@ -232,6 +234,8 @@ void Solver<Dtype>::Solve(const char* resume_file) {
   Step(param_.max_iter() - iter_);
   // If we haven't already, save a snapshot after optimization, unless
   // overridden by setting snapshot_after_train := false
+
+  Caffe::GetParamServer(Dtype(0.0)) -> sync();
   if (param_.snapshot_after_train()
       && (!param_.snapshot() || iter_ % param_.snapshot() != 0)) {
     Snapshot();

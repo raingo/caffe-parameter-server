@@ -773,7 +773,7 @@ void Net<Dtype>::Update() {
   for (int i = 0; i < params_.size(); ++i) {
     if (param_owners_[i] >= 0) { continue; }
     if (debug_info_) { UpdateDebugInfo(i); }
-    params_[i]->Update();
+    params_[i]->Update(i);
   }
 }
 

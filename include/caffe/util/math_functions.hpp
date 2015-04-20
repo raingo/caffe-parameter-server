@@ -6,7 +6,7 @@
 
 #include "glog/logging.h"
 
-#include "caffe/common.hpp"
+//#include "caffe/common.hpp"
 #include "caffe/util/device_alternate.hpp"
 #include "caffe/util/mkl_alternate.hpp"
 

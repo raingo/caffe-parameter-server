@@ -12,6 +12,7 @@ test_interval: 1000
 # The base learning rate, momentum and the weight decay of the network.
 base_lr: 0.001
 momentum: 0.9
+#solver_type: ADAGRAD
 weight_decay: 0.004
 # The learning rate policy
 lr_policy: "fixed"

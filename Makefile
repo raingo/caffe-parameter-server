@@ -262,6 +262,8 @@ ifneq (,$(findstring clang++,$(CXX)))
 	STATIC_LINK_COMMAND := -Wl,-force_load $(STATIC_NAME)
 else ifneq (,$(findstring g++,$(CXX)))
 	STATIC_LINK_COMMAND := -Wl,--whole-archive $(STATIC_NAME) -Wl,--no-whole-archive
+else ifneq (,$(findstring mpicxx,$(CXX)))
+	STATIC_LINK_COMMAND := -Wl,--whole-archive $(STATIC_NAME) -Wl,--no-whole-archive
 else
   # The following line must not be indented with a tab, since we are not inside a target
   $(error Cannot static link with the $(CXX) compiler)
@@ -340,11 +342,11 @@ CXXFLAGS += -MMD -MP
 
 # Complete build flags.
 COMMON_FLAGS += $(foreach includedir,$(INCLUDE_DIRS),-I$(includedir))
-CXXFLAGS += -pthread -fPIC $(COMMON_FLAGS) $(WARNINGS)
+CXXFLAGS += -fopenmp -pthread -fPIC $(COMMON_FLAGS) $(WARNINGS)
 NVCCFLAGS += -ccbin=$(CXX) -Xcompiler -fPIC $(COMMON_FLAGS)
 # mex may invoke an older gcc that is too liberal with -Wuninitalized
 MATLAB_CXXFLAGS := $(CXXFLAGS) -Wno-uninitialized
-LINKFLAGS += -pthread -fPIC $(COMMON_FLAGS) $(WARNINGS)
+LINKFLAGS += -fopenmp -pthread -fPIC $(COMMON_FLAGS) $(WARNINGS)
 
 USE_PKG_CONFIG ?= 0
 ifeq ($(USE_PKG_CONFIG), 1)
@@ -612,5 +614,6 @@ $(DISTRIBUTE_DIR): all py | $(DISTRIBUTE_SUBDIRS)
 	cp $(DYNAMIC_NAME) $(DISTRIBUTE_DIR)/lib
 	# add python - it's not the standard way, indeed...
 	cp -r python $(DISTRIBUTE_DIR)/python
+	./add-deps.sh ${DISTRIBUTE_DIR}
 
 -include $(DEPS)

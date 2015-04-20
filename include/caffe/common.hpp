@@ -16,7 +16,10 @@
 #include <utility>  // pair
 #include <vector>
 
+#include "caffe/util/math_functions.hpp"
 #include "caffe/util/device_alternate.hpp"
+#include "caffe/ParamServer.hpp"
+
 
 // gflags 2.1 issue: namespace google was changed to gflags without warning.
 // Luckily we will be able to use GFLAGS_GFAGS_H_ to detect if it is version
@@ -69,6 +72,9 @@ private:\
 namespace cv { class Mat; }
 
 namespace caffe {
+
+template <typename Dtype>
+class Blob;
 
 // We will use the boost shared_ptr instead of the new C++11 one mainly
 // because cuda does not work (at least now) well with C++11 features.
@@ -134,6 +140,20 @@ class Caffe {
   }
 #endif
 
+
+
+  inline static shared_ptr<ParamServer<Blob<double> > > GetParamServer(double dummy)
+  {
+      return Get().ParamServer_Double_;
+  }
+
+  inline static shared_ptr<ParamServer<Blob<float> > > GetParamServer(float dummy)
+  {
+      return Get().ParamServer_Float_;
+  }
+
+
+
   // Returns the mode: running on CPU or GPU.
   inline static Brew mode() { return Get().mode_; }
   // The setters for the variables
@@ -156,6 +176,8 @@ class Caffe {
   curandGenerator_t curand_generator_;
 #endif
   shared_ptr<RNG> random_generator_;
+  shared_ptr<ParamServer<Blob<double> > > ParamServer_Double_;
+  shared_ptr<ParamServer<Blob<float> > > ParamServer_Float_;
 
   Brew mode_;
   static shared_ptr<Caffe> singleton_;

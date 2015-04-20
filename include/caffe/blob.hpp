@@ -24,6 +24,7 @@ namespace caffe {
 template <typename Dtype>
 class Blob {
  public:
+     typedef Dtype element_type;
   Blob()
        : data_(), diff_(), count_(0), capacity_(0) {}
 
@@ -226,7 +227,7 @@ class Blob {
   Dtype* mutable_gpu_data();
   Dtype* mutable_cpu_diff();
   Dtype* mutable_gpu_diff();
-  void Update();
+  void Update(int);
   void FromProto(const BlobProto& proto, bool reshape = true);
   void ToProto(BlobProto* proto, bool write_diff = false) const;
 

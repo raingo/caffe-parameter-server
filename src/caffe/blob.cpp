@@ -135,18 +135,19 @@ void Blob<Dtype>::ShareDiff(const Blob& other) {
 // The "update" method is used for parameter blobs in a Net, which are stored
 // as Blob<float> or Blob<double> -- hence we do not define it for
 // Blob<int> or Blob<unsigned int>.
-template <> void Blob<unsigned int>::Update() { NOT_IMPLEMENTED; }
-template <> void Blob<int>::Update() { NOT_IMPLEMENTED; }
+template <> void Blob<unsigned int>::Update(int) { NOT_IMPLEMENTED; }
+template <> void Blob<int>::Update(int) { NOT_IMPLEMENTED; }
 
 template <typename Dtype>
-void Blob<Dtype>::Update() {
+void Blob<Dtype>::Update(int i) {
   // We will perform update based on where the data is located.
   switch (data_->head()) {
   case SyncedMemory::HEAD_AT_CPU:
+    Caffe::GetParamServer(Dtype(0.0))->update(i);
     // perform computation on CPU
-    caffe_axpy<Dtype>(count_, Dtype(-1),
-        static_cast<const Dtype*>(diff_->cpu_data()),
-        static_cast<Dtype*>(data_->mutable_cpu_data()));
+    //caffe_axpy<Dtype>(count_, Dtype(-1),
+    //    static_cast<const Dtype*>(diff_->cpu_data()),
+    //    static_cast<Dtype*>(data_->mutable_cpu_data()));
     break;
   case SyncedMemory::HEAD_AT_GPU:
   case SyncedMemory::SYNCED:
@@ -491,4 +492,3 @@ template class Blob<int>;
 template class Blob<unsigned int>;
 
 }  // namespace caffe
-
